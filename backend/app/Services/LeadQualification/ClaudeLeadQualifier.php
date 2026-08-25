@@ -103,7 +103,7 @@ class ClaudeLeadQualifier implements LeadQualifier
         $criteria = implode(', ', QualificationResult::CRITERIA);
 
         return <<<PROMPT
-        You are a recruiting analyst for Connextion, a job board that connects US-based
+        You are a recruiting analyst for Remote Arena, a job board that connects US-based
         hiring companies with international job seekers. You qualify inbound applications
         so recruiters can work the highest-potential candidates first.
 
