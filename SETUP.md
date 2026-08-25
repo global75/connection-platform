@@ -97,6 +97,41 @@ Or use `QUEUE_CONNECTION=sync` in `.env` during development to run jobs immediat
 
 ---
 
+---
+
+## Step 6 — AI Lead Qualification (optional)
+
+Applications are scored automatically as they arrive. With no configuration the
+platform uses its built-in heuristic scorer; to use Claude instead, add a key to
+`backend/.env`:
+
+```bash
+ANTHROPIC_API_KEY=sk-ant-...
+```
+
+Qualification runs on the queue, so keep `php artisan queue:work` running (or use
+`QUEUE_CONNECTION=sync`). To score applications created before the feature existed:
+
+```bash
+php artisan leads:qualify
+```
+
+See the "AI Lead Qualification" section of `README.md` for the full settings list.
+
+---
+
+## Running the Test Suite
+
+```bash
+cd backend
+php vendor/bin/phpunit          # or: php artisan test
+```
+
+Tests run against an in-memory SQLite database and never call the Anthropic API —
+`phpunit.xml` pins the qualification driver to `heuristic`.
+
+---
+
 ## Useful Artisan Commands
 
 ```bash

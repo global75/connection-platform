@@ -2,11 +2,40 @@
   <div class="space-y-4">
     <div class="flex items-center justify-between">
       <h1 class="text-2xl font-bold">Applications</h1>
-      <div class="flex gap-2">
+      <div class="flex flex-wrap gap-2">
+        <select v-model="filters.tier" class="input text-sm w-36" @change="load">
+          <option value="">All leads</option>
+          <option value="hot">Hot leads</option>
+          <option value="warm">Warm leads</option>
+          <option value="cold">Cold leads</option>
+        </select>
         <select v-model="filters.status" class="input text-sm w-40" @change="load">
           <option value="">All statuses</option>
           <option v-for="s in statuses" :key="s" :value="s" class="capitalize">{{ s }}</option>
         </select>
+        <select v-model="filters.sort" class="input text-sm w-40" @change="load">
+          <option value="recent">Newest first</option>
+          <option value="score">Highest score first</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Qualification pipeline at a glance -->
+    <div v-if="summary" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <button
+        v-for="tier in ['hot', 'warm', 'cold']" :key="tier"
+        class="card p-4 text-left hover:border-primary-200 transition-colors"
+        :class="filters.tier === tier ? 'border-primary-400' : ''"
+        @click="toggleTier(tier)"
+      >
+        <p class="text-xs text-gray-400 capitalize">{{ tier }} leads</p>
+        <p class="text-2xl font-bold">{{ summary.tiers[tier].total }}</p>
+        <p class="text-xs text-gray-400">avg {{ summary.tiers[tier].average_score }}</p>
+      </button>
+      <div class="card p-4">
+        <p class="text-xs text-gray-400">Awaiting scoring</p>
+        <p class="text-2xl font-bold">{{ summary.awaiting_qualification }}</p>
+        <p v-if="summary.failed" class="text-xs text-red-500">{{ summary.failed }} failed</p>
       </div>
     </div>
 
@@ -35,6 +64,7 @@
           <div class="hidden sm:flex gap-1 flex-wrap justify-end">
             <span v-for="skill in app.job_seeker?.skills?.slice(0,3)" :key="skill.id" class="badge-gray text-xs">{{ skill.name }}</span>
           </div>
+          <QualificationBadge :qualification="app.qualification" />
           <span :class="badgeClass(app.status)" class="capitalize text-xs">{{ app.status.replace('_', ' ') }}</span>
           <p class="text-xs text-gray-400 whitespace-nowrap">{{ timeAgo(app.created_at) }}</p>
         </div>
@@ -47,11 +77,13 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { applicationsApi } from '@/api/applications'
+import QualificationBadge from '@/components/leads/QualificationBadge.vue'
 
 const router = useRouter()
 const loading = ref(true)
 const applications = ref([])
-const filters = ref({ status: '' })
+const summary = ref(null)
+const filters = ref({ status: '', tier: '', sort: 'recent' })
 const statuses = ['submitted', 'viewed', 'shortlisted', 'interview_scheduled', 'offer_extended', 'hired', 'rejected']
 
 function badgeClass(s) {
@@ -62,6 +94,11 @@ function timeAgo(d) {
   return diff === 0 ? 'Today' : diff === 1 ? 'Yesterday' : `${diff}d ago`
 }
 
+function toggleTier(tier) {
+  filters.value.tier = filters.value.tier === tier ? '' : tier
+  load()
+}
+
 async function load() {
   loading.value = true
   const { data } = await applicationsApi.list(filters.value)
@@ -69,5 +106,17 @@ async function load() {
   loading.value = false
 }
 
-onMounted(load)
+async function loadSummary() {
+  try {
+    const { data } = await applicationsApi.qualificationSummary()
+    summary.value = data.summary
+  } catch {
+    summary.value = null
+  }
+}
+
+onMounted(() => {
+  load()
+  loadSummary()
+})
 </script>

@@ -32,6 +32,13 @@
         </div>
       </div>
 
+      <!-- AI lead qualification -->
+      <QualificationCard
+        :qualification="application.qualification"
+        :busy="requalifying"
+        @requalify="requalify"
+      />
+
       <!-- Job info -->
       <div class="card p-5">
         <p class="text-sm text-gray-500">Applied for</p>
@@ -85,11 +92,13 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { applicationsApi } from '@/api/applications'
+import QualificationCard from '@/components/leads/QualificationCard.vue'
 
 const route       = useRoute()
 const loading     = ref(true)
 const updating    = ref(false)
 const updateSuccess = ref(false)
+const requalifying  = ref(false)
 const application = ref(null)
 const notes       = ref('')
 
@@ -113,9 +122,30 @@ async function setStatus(status) {
   updateSuccess.value = true
 }
 
-onMounted(async () => {
+async function refresh() {
   const { data } = await applicationsApi.show(route.params.id)
   application.value = data.application
+  return data.application.qualification
+}
+
+// Qualification runs on the queue, so poll until the verdict settles.
+async function requalify() {
+  requalifying.value = true
+  try {
+    await applicationsApi.requalify(route.params.id)
+
+    for (let attempt = 0; attempt < 10; attempt++) {
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+      const qualification = await refresh()
+      if (qualification && !['pending', 'processing'].includes(qualification.status)) break
+    }
+  } finally {
+    requalifying.value = false
+  }
+}
+
+onMounted(async () => {
+  await refresh()
   loading.value = false
 })
 </script>
