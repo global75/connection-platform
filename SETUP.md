@@ -78,7 +78,7 @@ Open **http://localhost:5173** in your browser.
 
 | Role       | Email                  | Password  |
 |------------|------------------------|-----------|
-| Admin      | admin@connextion.io    | password  |
+| Admin      | admin@remotearena.io   | password  |
 | Employer   | employer@demo.com      | password  |
 | Job Seeker | seeker@demo.com        | password  |
 

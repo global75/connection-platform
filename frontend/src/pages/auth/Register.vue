@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2 class="text-2xl font-bold text-gray-900 mb-1">Create your account</h2>
-    <p class="text-gray-500 text-sm mb-6">Join thousands of professionals on Connextion</p>
+    <p class="text-gray-500 text-sm mb-6">Join thousands of professionals on Remote Arena</p>
 
     <!-- Role toggle -->
     <div class="flex rounded-lg border border-gray-200 p-1 mb-6 bg-gray-50">

@@ -1,4 +1,4 @@
-# Connextion Platform
+# Remote Arena Platform
 
 A production-ready job board connecting US-based hiring companies with skilled international job seekers.
 
@@ -14,7 +14,7 @@ A production-ready job board connecting US-based hiring companies with skilled i
 ## Architecture Overview
 
 ```
-connextion-platform/
+remotearena-platform/
 ├── backend/                  # Laravel 11 API
 │   ├── app/
 │   │   ├── Http/

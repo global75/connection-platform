@@ -6,7 +6,7 @@
         Your Skills, <span class="text-primary-300">US Opportunities</span>
       </h1>
       <p class="text-xl text-primary-100 mb-10 max-w-2xl mx-auto">
-        Connextion bridges the gap between world-class international talent and top US companies hiring remotely.
+        Remote Arena bridges the gap between world-class international talent and top US companies hiring remotely.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <RouterLink to="/jobs" class="btn bg-white text-primary-700 hover:bg-primary-50 text-base px-8 py-3">

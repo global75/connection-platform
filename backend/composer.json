@@ -1,6 +1,6 @@
 {
     "name": "connextion/platform-api",
-    "description": "Connextion Platform — Laravel API Backend",
+    "description": "Remote Arena Platform — Laravel API Backend",
     "keywords": ["laravel", "jobs", "hiring"],
     "license": "MIT",
     "require": {
