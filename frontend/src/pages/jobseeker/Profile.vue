@@ -18,10 +18,73 @@
           <input v-model="form.headline" class="input" placeholder="Senior Laravel Developer" /></div>
         <div><label class="label">Bio</label>
           <textarea v-model="form.bio" rows="4" class="input" placeholder="Tell employers about yourself…"></textarea></div>
-        <div class="grid grid-cols-2 gap-4">
-          <div><label class="label">City</label><input v-model="form.current_city" class="input" /></div>
-          <div><label class="label">Country</label><input v-model="form.current_country" class="input" /></div>
+        <div class="grid sm:grid-cols-3 gap-4">
+          <div><label class="label">City</label><input v-model="form.current_city" class="input" placeholder="Denver" /></div>
+          <div><label class="label">State / province</label><input v-model="form.current_state" class="input" placeholder="CO" /></div>
+          <div>
+            <label class="label">Country</label>
+            <select v-model="form.current_country" class="input">
+              <option value="">Select a country</option>
+              <option v-for="country in countries" :key="country.code" :value="country.code">{{ country.name }}</option>
+            </select>
+          </div>
         </div>
+      </div>
+
+      <!-- Where and how they want to work: two separate questions -->
+      <div class="card p-6 space-y-5">
+        <h2 class="font-semibold border-b pb-2">Work preferences</h2>
+
+        <fieldset>
+          <legend class="label">How do you want to work?</legend>
+          <div class="grid sm:grid-cols-3 gap-3">
+            <label
+              v-for="option in WORK_ARRANGEMENTS" :key="option.value"
+              class="flex items-start gap-2 p-3 rounded-lg border cursor-pointer transition-colors"
+              :class="form.work_arrangements.includes(option.value) ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:bg-gray-50'"
+            >
+              <input type="checkbox" class="mt-1 rounded text-primary-600" :value="option.value" v-model="form.work_arrangements" />
+              <span>
+                <span class="text-sm font-medium">{{ option.icon }} {{ option.label }}</span>
+                <span class="block text-xs text-gray-500">{{ option.hint }}</span>
+              </span>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend class="label">Where are you willing to work?</legend>
+          <div class="grid sm:grid-cols-3 gap-3">
+            <label
+              v-for="scope in LOCATION_SCOPES" :key="scope.value"
+              class="flex items-start gap-2 p-3 rounded-lg border cursor-pointer transition-colors"
+              :class="form.location_scopes.includes(scope.value) ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:bg-gray-50'"
+            >
+              <input type="checkbox" class="mt-1 rounded text-primary-600" :value="scope.value" v-model="form.location_scopes" />
+              <span>
+                <span class="text-sm font-medium">{{ scope.label }}</span>
+                <span class="block text-xs text-gray-500">{{ scope.hint }}</span>
+              </span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div v-if="form.location_scopes.includes('near_me')">
+          <label class="label">How far will you travel?</label>
+          <select v-model.number="form.max_commute_miles" class="input w-48">
+            <option v-for="miles in RADIUS_OPTIONS" :key="miles" :value="miles">Within {{ miles }} miles</option>
+          </select>
+        </div>
+
+        <fieldset>
+          <legend class="label">Job types you want</legend>
+          <div class="flex flex-wrap gap-3">
+            <label v-for="type in EMPLOYMENT_TYPES" :key="type.value" class="flex items-center gap-2 text-sm">
+              <input type="checkbox" class="rounded text-primary-600" :value="type.value" v-model="form.employment_types" />
+              {{ type.label }}
+            </label>
+          </div>
+        </fieldset>
       </div>
 
       <!-- Experience -->
@@ -58,14 +121,9 @@
             <option value="negotiable">Negotiable</option>
           </select>
         </div>
-        <div class="flex gap-4">
-          <label class="flex items-center gap-2 text-sm">
-            <input v-model="form.open_to_remote" type="checkbox" class="rounded text-primary-600" /> Open to remote
-          </label>
-          <label class="flex items-center gap-2 text-sm">
-            <input v-model="form.willing_to_relocate" type="checkbox" class="rounded text-primary-600" /> Willing to relocate
-          </label>
-        </div>
+        <label class="flex items-center gap-2 text-sm">
+          <input v-model="form.willing_to_relocate" type="checkbox" class="rounded text-primary-600" /> Willing to relocate
+        </label>
       </div>
 
       <!-- Links -->
@@ -99,7 +157,10 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import client from '@/api/client'
+import { discoveryApi } from '@/api/discovery'
+import { WORK_ARRANGEMENTS, LOCATION_SCOPES, EMPLOYMENT_TYPES, RADIUS_OPTIONS } from '@/lib/labels'
 
+const countries = ref([])
 const profile = ref(null)
 const saving  = ref(false)
 const success = ref(false)
@@ -107,10 +168,11 @@ const errors  = ref(null)
 const resume  = ref(null)
 
 const form = ref({
-  headline: '', bio: '', current_city: '', current_country: '', nationality: '',
+  headline: '', bio: '', current_city: '', current_state: '', current_country: '', nationality: '',
   current_job_title: '', desired_job_title: '', experience_level: 'mid',
   years_of_experience: 0, desired_salary_min: null, desired_salary_max: null,
-  availability: 'negotiable', open_to_remote: true, willing_to_relocate: false,
+  availability: 'negotiable', willing_to_relocate: false,
+  work_arrangements: [], location_scopes: [], max_commute_miles: 25, employment_types: [],
   linkedin_url: '', github_url: '', portfolio_url: '',
 })
 
@@ -122,7 +184,18 @@ async function save() {
   errors.value  = null
   try {
     const fd = new FormData()
-    Object.entries(form.value).forEach(([k, v]) => { if (v !== null && v !== undefined) fd.append(k, v) })
+    Object.entries(form.value).forEach(([key, value]) => {
+      if (value === null || value === undefined || value === '') return
+      // Arrays go one entry per item, booleans as 1/0 — both are what the API
+      // validates against.
+      if (Array.isArray(value)) {
+        value.forEach((item) => fd.append(`${key}[]`, item))
+      } else if (typeof value === 'boolean') {
+        fd.append(key, value ? '1' : '0')
+      } else {
+        fd.append(key, value)
+      }
+    })
     if (resume.value) fd.append('resume', resume.value)
     fd.append('_method', 'PUT')
     const { data } = await client.post('/job-seeker/profile', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
@@ -136,8 +209,21 @@ async function save() {
 }
 
 onMounted(async () => {
-  const { data } = await client.get('/job-seeker/profile')
-  profile.value = data.profile
-  Object.assign(form.value, data.profile)
+  const [profileRes, filtersRes] = await Promise.allSettled([
+    client.get('/job-seeker/profile'),
+    discoveryApi.filters(),
+  ])
+
+  if (filtersRes.status === 'fulfilled') countries.value = filtersRes.value.data.countries
+
+  if (profileRes.status === 'fulfilled') {
+    profile.value = profileRes.value.data.profile
+    Object.assign(form.value, profile.value, {
+      work_arrangements: profile.value.work_arrangements ?? [],
+      location_scopes: profile.value.location_scopes ?? [],
+      employment_types: profile.value.employment_types ?? [],
+      max_commute_miles: profile.value.max_commute_miles ?? 25,
+    })
+  }
 })
 </script>

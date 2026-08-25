@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\DiscoveryController;
 use App\Http\Controllers\Api\JobController;
+use App\Http\Controllers\Api\SitemapController;
 use App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Api\Employer;
 use App\Http\Controllers\Api\JobSeeker;
@@ -17,6 +19,17 @@ Route::post('/auth/login',    [AuthController::class, 'login']);
 // Public job listings
 Route::get('/jobs',       [JobController::class, 'index']);
 Route::get('/jobs/{slug}',[JobController::class, 'show']);
+
+// Marketplace discovery: real locations, categories and counts
+Route::get('/locations',            [DiscoveryController::class, 'locations']);
+Route::get('/locations/suggest',    [DiscoveryController::class, 'locationSuggest']);
+Route::get('/locations/{slug}',     [DiscoveryController::class, 'location']);
+Route::get('/categories',           [DiscoveryController::class, 'categories']);
+Route::get('/stats',                [DiscoveryController::class, 'stats']);
+Route::get('/search-filters',       [DiscoveryController::class, 'filters']);
+
+// SEO
+Route::get('/sitemap.xml',          [SitemapController::class, 'index']);
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Authenticated (any role)

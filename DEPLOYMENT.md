@@ -217,3 +217,30 @@ STRIPE_SECRET=sk_live_...
 - [ ] Monitor queue health with **Laravel Horizon**
 - [ ] Set up uptime monitoring (Better Uptime, UptimeRobot)
 - [ ] Configure **log rotation** for storage/logs
+
+---
+
+## 10. SEO: sitemap and location pages
+
+The API generates the sitemap from live data at `GET /api/sitemap.xml`. It lists the
+homepage, `/jobs`, the four search-mode pages, every active job, and only those
+location pages that have at least three live jobs — empty places are never emitted.
+
+Point the public sitemap at it and let crawlers find it from robots.txt:
+
+```nginx
+# nginx: serve the generated sitemap at the conventional path
+location = /sitemap.xml {
+    proxy_pass http://127.0.0.1:8000/api/sitemap.xml;
+}
+```
+
+```
+# frontend/public/robots.txt (or the API's public/robots.txt when it serves the domain)
+User-agent: *
+Disallow:
+Sitemap: https://your-domain.com/sitemap.xml
+```
+
+`FRONTEND_URL` must be set in the API environment: the sitemap builds absolute URLs
+from it (falling back to `APP_URL`).

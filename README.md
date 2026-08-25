@@ -1,6 +1,15 @@
 # Connextion Platform
 
-A production-ready job board connecting US-based hiring companies with skilled international job seekers.
+A hiring marketplace connecting employers and professionals locally, nationally and
+internationally. Jobs describe three separate things:
+
+| Concept | Field | Values |
+| --- | --- | --- |
+| Where the job is | `location_city` / `location_state` / `location_country` (+ coordinates) | any place |
+| How the work happens | `work_arrangement` | `on_site`, `hybrid`, `remote` |
+| Who may apply | `hiring_scope` (+ `eligible_countries`) | `local`, `state`, `national`, `north_america`, `international`, `specific_countries` |
+
+Remote is one work arrangement, not the definition of the marketplace.
 
 ## Stack
 - **Backend**: Laravel 11 (REST API)
