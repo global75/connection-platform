@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Services\LocationService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -13,7 +14,8 @@ class EmployerProfile extends Model
     protected $fillable = [
         'user_id', 'company_name', 'company_slug', 'description', 'industry',
         'company_size', 'website', 'logo', 'headquarters_city', 'headquarters_state',
-        'headquarters_country', 'linkedin_url', 'twitter_url', 'founded_year',
+        'headquarters_country', 'headquarters_postal_code', 'latitude', 'longitude',
+        'hiring_scopes', 'linkedin_url', 'twitter_url', 'founded_year',
         'is_verified', 'is_featured', 'subscription_tier', 'job_post_credits',
     ];
 
@@ -22,7 +24,13 @@ class EmployerProfile extends Model
         'is_featured'  => 'boolean',
         'founded_year' => 'integer',
         'job_post_credits' => 'integer',
+        'latitude'     => 'float',
+        'longitude'    => 'float',
+        'hiring_scopes'=> 'array',
     ];
+
+    /** Where this company hires. Seeds the defaults on the job posting form. */
+    public const HIRING_SCOPES = ['local', 'national', 'remote', 'international'];
 
     // ── Relationships ──────────────────────────────────────────────
 
@@ -62,6 +70,37 @@ class EmployerProfile extends Model
                 $profile->company_slug = Str::slug($profile->company_name);
             }
         });
+
+        static::saving(function (self $profile) {
+            $profile->normalizeLocation();
+        });
+    }
+
+    /** Normalises headquarters data and attaches real coordinates when known. */
+    public function normalizeLocation(): void
+    {
+        $locations = app(LocationService::class);
+
+        if (filled($this->headquarters_country)) {
+            $this->headquarters_country = $locations->normalizeCountry($this->headquarters_country) ?? $this->headquarters_country;
+        }
+        if (filled($this->headquarters_state)) {
+            $this->headquarters_state = $locations->normalizeState($this->headquarters_state, $this->headquarters_country);
+        }
+
+        $coords = $locations->coordinatesFor($this->headquarters_city, $this->headquarters_state, $this->headquarters_country);
+        if ($coords) {
+            $this->latitude  = $coords['latitude'];
+            $this->longitude = $coords['longitude'];
+            $this->headquarters_state ??= $coords['state'];
+        } elseif (blank($this->headquarters_city)) {
+            $this->latitude  = null;
+            $this->longitude = null;
+        }
+
+        if (is_array($this->hiring_scopes)) {
+            $this->hiring_scopes = array_values(array_intersect(self::HIRING_SCOPES, $this->hiring_scopes));
+        }
     }
 
     // ── Helpers ───────────────────────────────────────────────────

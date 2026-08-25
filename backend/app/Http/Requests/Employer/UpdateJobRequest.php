@@ -2,14 +2,10 @@
 
 namespace App\Http\Requests\Employer;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class UpdateJobRequest extends FormRequest
+/**
+ * Same contract as posting a job, so validation stays context-aware (required
+ * city for on-site roles, required country list for country-specific hiring).
+ */
+class UpdateJobRequest extends StoreJobRequest
 {
-    public function authorize(): bool { return true; }
-
-    public function rules(): array
-    {
-        return (new StoreJobRequest())->rules();
-    }
 }

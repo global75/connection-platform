@@ -22,13 +22,24 @@ class AuthService
                 'country'  => $data['country'] ?? null,
             ]);
 
+            // Onboarding answers become the profile's starting location and
+            // preferences, which in turn seed job matching and posting defaults.
             match ($user->role) {
                 'employer'   => EmployerProfile::create([
-                    'user_id'      => $user->id,
-                    'company_name' => $data['company_name'],
+                    'user_id'              => $user->id,
+                    'company_name'         => $data['company_name'],
+                    'headquarters_city'    => $data['city'] ?? null,
+                    'headquarters_state'   => $data['state'] ?? null,
+                    'headquarters_country' => $data['country'] ?? 'US',
+                    'hiring_scopes'        => $data['hiring_scopes'] ?? null,
                 ]),
                 'job_seeker' => JobSeekerProfile::create([
-                    'user_id' => $user->id,
+                    'user_id'           => $user->id,
+                    'current_city'      => $data['city'] ?? null,
+                    'current_state'     => $data['state'] ?? null,
+                    'current_country'   => $data['country'] ?? null,
+                    'work_arrangements' => $data['work_arrangements'] ?? null,
+                    'location_scopes'   => $data['location_scopes'] ?? null,
                 ]),
                 default => null,
             };
