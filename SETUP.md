@@ -130,7 +130,14 @@ curl -X POST http://localhost:8000/api/auth/login \
   -d '{"email":"seeker@demo.com","password":"password"}'
 
 # Search jobs (public)
-curl http://localhost:8000/api/jobs?location_type=remote
+curl "http://localhost:8000/api/jobs?work_arrangement=remote"
+
+# Location-first search (near me, nationwide, remote, international)
+curl "http://localhost:8000/api/jobs?location=Denver,%20CO&mode=near_me&radius=25"
+
+# Places and totals that actually exist in the database
+curl http://localhost:8000/api/locations
+curl http://localhost:8000/api/stats
 
 # Get job detail
 curl http://localhost:8000/api/jobs/senior-laravel-developer-remote-xxxxxx

@@ -330,9 +330,13 @@ class Job extends Model
             $this->hiring_scope = 'national';
         }
 
-        // A fully remote job does not need a city.
-        if ($this->isRemote() && in_array($this->hiring_scope, ['international', 'north_america', 'specific_countries'], true)) {
-            $this->location_city = $this->location_city ?: null;
+        // A fully remote job open beyond one area does not belong to a city, so
+        // a city left over from an earlier edit is dropped rather than kept —
+        // otherwise the role would keep surfacing in that city's local search.
+        if ($this->isRemote() && in_array($this->hiring_scope, ['international', 'north_america', 'specific_countries', 'national'], true)) {
+            $this->location_city        = null;
+            $this->location_state       = null;
+            $this->location_postal_code = null;
         }
 
         $coords = $locations->coordinatesFor($this->location_city, $this->location_state, $this->location_country);

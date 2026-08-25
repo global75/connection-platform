@@ -1,0 +1,3 @@
+# Local environment overrides (never commit; they carry APP_KEY and credentials)
+backend/.env.testing
+backend/.env.local

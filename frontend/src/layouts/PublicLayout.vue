@@ -20,6 +20,7 @@
             </div>
           </div>
           <RouterLink to="/for-employers" class="hover:text-primary-600">For Employers</RouterLink>
+          <RouterLink to="/faq" class="hover:text-primary-600">FAQ</RouterLink>
         </nav>
 
         <div class="flex items-center gap-3">
@@ -35,6 +36,7 @@
         <RouterLink to="/jobs/remote" class="whitespace-nowrap">Remote</RouterLink>
         <RouterLink to="/jobs/international" class="whitespace-nowrap">International</RouterLink>
         <RouterLink to="/for-employers" class="whitespace-nowrap">For employers</RouterLink>
+        <RouterLink to="/faq" class="whitespace-nowrap">FAQ</RouterLink>
       </div>
     </header>
 
@@ -48,7 +50,7 @@
         <div class="grid gap-8 sm:grid-cols-3 text-center sm:text-left">
           <div>
             <p class="font-semibold text-white mb-1">Connextion</p>
-            <p>Hiring without geographic limits — local, national and international.</p>
+            <p>Connecting talent and businesses locally, nationally and globally.</p>
           </div>
           <div>
             <p class="font-semibold text-white mb-2">For professionals</p>
@@ -57,6 +59,7 @@
               <li><RouterLink to="/jobs/near_me" class="hover:text-white">Jobs near me</RouterLink></li>
               <li><RouterLink to="/jobs/remote" class="hover:text-white">Remote jobs</RouterLink></li>
               <li><RouterLink to="/jobs/international" class="hover:text-white">International jobs</RouterLink></li>
+              <li><RouterLink to="/register" class="hover:text-white">Sign up</RouterLink></li>
             </ul>
           </div>
           <div>
@@ -64,6 +67,7 @@
             <ul class="space-y-1">
               <li><RouterLink to="/for-employers" class="hover:text-white">How hiring works</RouterLink></li>
               <li><RouterLink to="/register?role=employer" class="hover:text-white">Post a job</RouterLink></li>
+              <li><RouterLink to="/faq" class="hover:text-white">FAQ</RouterLink></li>
             </ul>
           </div>
         </div>

@@ -1,1 +1,0 @@
-import{I as s}from"./index-Dx3h0Jj-.js";const e={locations:t=>s.get("/locations",{params:t}),location:t=>s.get(`/locations/${t}`),suggestLocation:t=>s.get("/locations/suggest",{params:{q:t}}),categories:()=>s.get("/categories"),stats:()=>s.get("/stats"),filters:t=>s.get("/search-filters",{params:t})};export{e as d};

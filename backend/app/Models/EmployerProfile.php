@@ -67,7 +67,16 @@ class EmployerProfile extends Model
 
         static::creating(function (self $profile) {
             if (empty($profile->company_slug)) {
-                $profile->company_slug = Str::slug($profile->company_name);
+                // Two companies can share a name, so the slug needs a suffix
+                // rather than colliding on the unique index during signup.
+                $base = Str::slug($profile->company_name);
+                $slug = $base;
+
+                while (static::where('company_slug', $slug)->exists()) {
+                    $slug = $base . '-' . Str::lower(Str::random(6));
+                }
+
+                $profile->company_slug = $slug;
             }
         });
 

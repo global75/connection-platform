@@ -12,6 +12,7 @@ const router = createRouter({
       children: [
         { path: '',       name: 'home',    component: () => import('@/pages/Home.vue') },
         { path: 'for-employers', name: 'for-employers', component: () => import('@/pages/ForEmployers.vue') },
+        { path: 'faq',    name: 'faq',     component: () => import('@/pages/Faq.vue') },
 
         { path: 'jobs',   name: 'jobs',    component: () => import('@/pages/jobs/JobSearch.vue') },
 
