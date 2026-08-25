@@ -18,12 +18,21 @@
             <div class="flex-1">
               <h1 class="text-2xl font-bold text-gray-900">{{ job.title }}</h1>
               <p class="text-gray-600 mt-0.5">{{ job.employer?.company_name }}</p>
+              <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-sm text-gray-600">
+                <span class="inline-flex items-center gap-1.5">
+                  <span aria-hidden="true">{{ job.work_arrangement === 'remote' ? '🌎' : '📍' }}</span>{{ job.location_label }}
+                </span>
+                <span class="inline-flex items-center gap-1.5">
+                  <span aria-hidden="true">{{ arrangement.icon }}</span>{{ arrangement.label }}
+                </span>
+                <span class="inline-flex items-center gap-1.5">
+                  <span aria-hidden="true">💼</span>{{ employmentMap[job.employment_type]?.label ?? job.employment_type }}
+                </span>
+              </div>
               <div class="flex flex-wrap gap-2 mt-3">
-                <span class="badge-gray">{{ locationMap[job.location_type] }}</span>
-                <span class="badge-gray">{{ employmentMap[job.employment_type] }}</span>
                 <span class="badge-gray capitalize">{{ job.experience_level }}</span>
+                <span class="badge-blue">Open to: {{ job.hiring_scope_label }}</span>
                 <span v-if="job.visa_sponsorship" class="badge-green">Visa Sponsorship</span>
-                <span v-if="job.open_to_international" class="badge-blue">Open to International</span>
               </div>
             </div>
           </div>
@@ -33,9 +42,17 @@
               <p class="text-gray-400">Salary</p>
               <p class="font-semibold">${{ job.salary_min.toLocaleString() }}{{ job.salary_max ? ` – $${job.salary_max.toLocaleString()}` : '+' }} / {{ job.salary_period }}</p>
             </div>
-            <div v-if="job.location_city">
+            <div>
               <p class="text-gray-400">Location</p>
-              <p class="font-semibold">{{ job.location_city }}, {{ job.location_state }}</p>
+              <p class="font-semibold">{{ job.location_label }}</p>
+            </div>
+            <div>
+              <p class="text-gray-400">Work arrangement</p>
+              <p class="font-semibold">{{ arrangement.label }}</p>
+            </div>
+            <div>
+              <p class="text-gray-400">Who can apply</p>
+              <p class="font-semibold">{{ job.hiring_scope_label }}</p>
             </div>
           </div>
 
@@ -119,6 +136,8 @@ import { useRoute, RouterLink } from 'vue-router'
 import { useJobsStore } from '@/stores/jobs'
 import { useAuthStore } from '@/stores/auth'
 import ApplyModal from '@/components/jobs/ApplyModal.vue'
+import { useSeo } from '@/composables/useSeo'
+import { workArrangement, employmentType as employmentMap } from '@/lib/labels'
 
 const route      = useRoute()
 const store      = useJobsStore()
@@ -129,8 +148,17 @@ const showApplyModal = ref(false)
 const job   = computed(() => store.currentJob)
 const isSaved = computed(() => store.savedIds.has(job.value?.id))
 
-const locationMap   = { remote: 'Remote', hybrid: 'Hybrid', on_site: 'On-site' }
-const employmentMap = { full_time: 'Full-time', part_time: 'Part-time', contract: 'Contract', freelance: 'Freelance', internship: 'Internship' }
+const arrangement = computed(
+  () => workArrangement[job.value?.work_arrangement] ?? { label: '—', icon: '📍' }
+)
+
+useSeo(() => ({
+  title: job.value ? `${job.value.title} — ${job.value.employer?.company_name}` : null,
+  description: job.value
+    ? `${job.value.title} at ${job.value.employer?.company_name}. ${job.value.location_label}, ${arrangement.value.label}.`
+    : null,
+  canonical: `/jobs/${route.params.slug}`,
+}))
 
 onMounted(() => store.fetchJob(route.params.slug))
 </script>

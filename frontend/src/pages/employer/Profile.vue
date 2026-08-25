@@ -33,10 +33,36 @@
       <!-- Location -->
       <div class="card p-6 space-y-4">
         <h2 class="font-semibold border-b pb-2">Headquarters</h2>
-        <div class="grid grid-cols-3 gap-4">
-          <div><label class="label">City</label><input v-model="form.headquarters_city" class="input" /></div>
-          <div><label class="label">State</label><input v-model="form.headquarters_state" class="input" /></div>
-          <div><label class="label">Country</label><input v-model="form.headquarters_country" class="input" /></div>
+        <div class="grid sm:grid-cols-3 gap-4">
+          <div><label class="label">City</label><input v-model="form.headquarters_city" class="input" placeholder="Denver" /></div>
+          <div><label class="label">State / province</label><input v-model="form.headquarters_state" class="input" placeholder="CO" /></div>
+          <div>
+            <label class="label">Country</label>
+            <select v-model="form.headquarters_country" class="input">
+              <option value="">Select a country</option>
+              <option v-for="country in countries" :key="country.code" :value="country.code">{{ country.name }}</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="label">Postal code</label>
+          <input v-model="form.headquarters_postal_code" class="input w-40" placeholder="80202" />
+        </div>
+      </div>
+
+      <!-- Where this company hires: seeds the defaults when posting a job -->
+      <div class="card p-6 space-y-3">
+        <h2 class="font-semibold border-b pb-2">Where do you hire?</h2>
+        <p class="text-sm text-gray-500">We use this to pre-fill new job postings. You can change it on any job.</p>
+        <div class="flex flex-wrap gap-3">
+          <label
+            v-for="scope in EMPLOYER_HIRING_SCOPES" :key="scope.value"
+            class="flex items-center gap-2 px-3 py-2 rounded-lg border cursor-pointer transition-colors"
+            :class="form.hiring_scopes.includes(scope.value) ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:bg-gray-50'"
+          >
+            <input type="checkbox" class="rounded text-primary-600" :value="scope.value" v-model="form.hiring_scopes" />
+            <span class="text-sm">{{ scope.label }}</span>
+          </label>
         </div>
       </div>
 
@@ -73,7 +99,10 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import client from '@/api/client'
+import { discoveryApi } from '@/api/discovery'
+import { EMPLOYER_HIRING_SCOPES } from '@/lib/labels'
 
+const countries = ref([])
 const profile = ref(null)
 const saving  = ref(false)
 const success = ref(false)
@@ -83,7 +112,8 @@ const logo    = ref(null)
 const form = ref({
   company_name: '', description: '', industry: '', company_size: '',
   website: '', founded_year: null, headquarters_city: '', headquarters_state: '',
-  headquarters_country: '', linkedin_url: '', twitter_url: '',
+  headquarters_country: '', headquarters_postal_code: '', hiring_scopes: [],
+  linkedin_url: '', twitter_url: '',
 })
 
 function onLogo(e) { logo.value = e.target.files[0] }
@@ -94,7 +124,14 @@ async function save() {
   errors.value  = null
   try {
     const fd = new FormData()
-    Object.entries(form.value).forEach(([k, v]) => { if (v !== null && v !== undefined && v !== '') fd.append(k, v) })
+    Object.entries(form.value).forEach(([key, value]) => {
+      if (value === null || value === undefined || value === '') return
+      if (Array.isArray(value)) {
+        value.forEach((item) => fd.append(`${key}[]`, item))
+      } else {
+        fd.append(key, value)
+      }
+    })
     if (logo.value) fd.append('logo', logo.value)
     fd.append('_method', 'PUT')
     const { data } = await client.post('/employer/profile', fd, { headers: { 'Content-Type': 'multipart/form-data' } })
@@ -108,8 +145,16 @@ async function save() {
 }
 
 onMounted(async () => {
-  const { data } = await client.get('/employer/profile')
-  profile.value = data.profile
-  Object.assign(form.value, data.profile)
+  const [profileRes, filtersRes] = await Promise.allSettled([
+    client.get('/employer/profile'),
+    discoveryApi.filters(),
+  ])
+
+  if (filtersRes.status === 'fulfilled') countries.value = filtersRes.value.data.countries
+
+  if (profileRes.status === 'fulfilled') {
+    profile.value = profileRes.value.data.profile
+    Object.assign(form.value, profile.value, { hiring_scopes: profile.value.hiring_scopes ?? [] })
+  }
 })
 </script>

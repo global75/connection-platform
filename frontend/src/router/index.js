@@ -11,7 +11,24 @@ const router = createRouter({
       component: () => import('@/layouts/PublicLayout.vue'),
       children: [
         { path: '',       name: 'home',    component: () => import('@/pages/Home.vue') },
+        { path: 'for-employers', name: 'for-employers', component: () => import('@/pages/ForEmployers.vue') },
+
         { path: 'jobs',   name: 'jobs',    component: () => import('@/pages/jobs/JobSearch.vue') },
+
+        // Search presets and location pages are indexable in their own right.
+        // They are declared before the job detail route so their paths are not
+        // mistaken for job slugs.
+        {
+          path: 'jobs/:mode(near_me|nationwide|remote|international)',
+          name: 'jobs.mode',
+          component: () => import('@/pages/jobs/JobSearch.vue'),
+        },
+        {
+          path: 'jobs/in/:location',
+          name: 'jobs.location',
+          component: () => import('@/pages/jobs/JobSearch.vue'),
+        },
+
         { path: 'jobs/:slug', name: 'job', component: () => import('@/pages/jobs/JobDetail.vue') },
       ],
     },
