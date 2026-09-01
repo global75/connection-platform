@@ -53,6 +53,10 @@ Route::middleware(['auth:sanctum', 'role:employer'])
     Route::get('/applications/{application}',            [Employer\ApplicationController::class, 'show']);
     Route::patch('/applications/{application}/status',   [Employer\ApplicationController::class, 'updateStatus']);
 
+    // Verification
+    Route::get('/verification',  [Employer\VerificationController::class, 'show']);
+    Route::post('/verification', [Employer\VerificationController::class, 'store']);
+
     // Messaging
     Route::get('/conversations',                                [Employer\MessageController::class, 'conversations']);
     Route::post('/conversations',                               [Employer\MessageController::class, 'initiate']);
@@ -86,6 +90,10 @@ Route::middleware(['auth:sanctum', 'role:job_seeker'])
     Route::get('/applications/{application}',        [JobSeeker\ApplicationController::class, 'show']);
     Route::patch('/applications/{application}/withdraw', [JobSeeker\ApplicationController::class, 'withdraw']);
 
+    // Verification
+    Route::get('/verification',  [JobSeeker\VerificationController::class, 'show']);
+    Route::post('/verification', [JobSeeker\VerificationController::class, 'store']);
+
     // Messaging
     Route::get('/conversations',                            [JobSeeker\MessageController::class, 'conversations']);
     Route::get('/conversations/{conversation}/messages',    [JobSeeker\MessageController::class, 'messages']);
@@ -113,6 +121,9 @@ Route::middleware(['auth:sanctum', 'role:admin'])
     Route::patch('/jobs/{job}/feature',  [Admin\JobController::class, 'feature']);
     Route::delete('/jobs/{job}',         [Admin\JobController::class, 'destroy']);
     Route::post('/jobs/{id}/restore',    [Admin\JobController::class, 'restore']);
+
+    Route::get('/verifications',                    [Admin\VerificationController::class, 'index']);
+    Route::patch('/verifications/{verification}',   [Admin\VerificationController::class, 'review']);
 
     Route::get('/reports',                       [Admin\ReportController::class, 'index']);
     Route::patch('/reports/{report}/resolve',    [Admin\ReportController::class, 'resolve']);

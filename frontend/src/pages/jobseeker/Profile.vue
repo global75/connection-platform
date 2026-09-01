@@ -6,6 +6,8 @@
         <div class="w-32 bg-gray-200 rounded-full h-2">
           <div class="bg-primary-600 h-2 rounded-full" :style="`width:${profile.completion}%`"></div>
         </div>
+
+    <VerificationPortal subject="candidate" />
         <span class="text-sm font-medium text-primary-700">{{ profile.completion }}% complete</span>
       </div>
     </div>
@@ -97,6 +99,7 @@
 </template>
 
 <script setup>
+import VerificationPortal from '@/components/verification/VerificationPortal.vue'
 import { ref, onMounted } from 'vue'
 import client from '@/api/client'
 

@@ -21,7 +21,7 @@ class ApplicationController extends Controller
             ->with([
                 'job:id,title,slug',
                 'jobSeeker.user:id,name,avatar',
-                'jobSeeker:id,user_id,headline,experience_level,current_country',
+                'jobSeeker:id,user_id,headline,experience_level,current_country,is_identity_verified,verified_badges',
                 'jobSeeker.skills:id,name',
             ])
             ->latest();

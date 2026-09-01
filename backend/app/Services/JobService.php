@@ -13,7 +13,7 @@ class JobService
     public function search(array $filters, int $perPage = 15): LengthAwarePaginator
     {
         $query = Job::active()
-            ->with(['employer:id,company_name,company_slug,logo,headquarters_city,headquarters_state', 'skills:id,name,slug'])
+            ->with(['employer:id,company_name,company_slug,logo,headquarters_city,headquarters_state,is_verified', 'skills:id,name,slug'])
             ->orderByDesc('is_featured')
             ->orderByDesc('created_at');
 
@@ -88,7 +88,7 @@ class JobService
         $job->incrementViews();
 
         return $job->load([
-            'employer:id,company_name,company_slug,logo,description,website,headquarters_city,headquarters_state,headquarters_country,founded_year,company_size',
+            'employer:id,company_name,company_slug,logo,description,website,headquarters_city,headquarters_state,headquarters_country,founded_year,company_size,is_verified,verified_at',
             'skills:id,name,slug,category',
         ]);
     }
