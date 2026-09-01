@@ -93,7 +93,7 @@ class ApplicationController extends Controller
      * Re-run AI qualification for a single application.
      *
      * The work is queued so the request returns immediately; the client polls
-     * `show` until the verdict leaves the processing state.
+     * `show` until the verdict's qualified_at moves.
      */
     public function qualify(Request $request, JobApplication $application): JsonResponse
     {
@@ -101,6 +101,16 @@ class ApplicationController extends Controller
 
         if (! config('ai.lead_qualification.enabled')) {
             return response()->json(['message' => 'Lead qualification is disabled.'], 409);
+        }
+
+        // A re-run already in flight holds the job's unique lock, and a second
+        // dispatch would be dropped on the floor — so say that rather than
+        // reporting work that was never queued.
+        if ($application->qualification?->status === 'processing') {
+            return response()->json([
+                'message'       => 'Qualification is already running for this application.',
+                'qualification' => $application->qualification,
+            ], 409);
         }
 
         QualifyApplicationLead::dispatch($application, force: true, announce: false);

@@ -28,6 +28,9 @@ return new class extends Migration
             $table->unsignedTinyInteger('attempts')->default(0);
             $table->text('error')->nullable();
             $table->timestamp('qualified_at')->nullable();
+            // Set once the hot-lead notification / auto-shortlist has run, so a
+            // retry after a failed announcement doesn't fire either one twice.
+            $table->timestamp('announced_at')->nullable();
             $table->timestamps();
 
             $table->index(['tier', 'score']);

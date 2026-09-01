@@ -240,9 +240,13 @@ class HeuristicLeadQualifier implements LeadQualifier
         }
 
         if ($criteria['logistics'] < 60) {
-            $concerns[] = $job['visa_sponsorship'] || $job['open_to_international']
-                ? 'Relocation would be required and the candidate has not marked themselves open to it.'
-                : 'Candidate is outside the hiring country and this role offers no sponsorship.';
+            $concerns[] = match (true) {
+                // A remote posting has no relocation or sponsorship question —
+                // the only blocker is the candidate not wanting remote work.
+                $job['location_type'] === 'remote' => 'Role is remote but the candidate has not marked themselves open to remote work.',
+                $job['visa_sponsorship'] || $job['open_to_international'] => 'Relocation would be required and the candidate has not marked themselves open to it.',
+                default => 'Candidate is outside the hiring country and this role offers no sponsorship.',
+            };
         }
 
         if ($criteria['intent'] < 55) {

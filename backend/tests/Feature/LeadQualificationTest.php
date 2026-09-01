@@ -177,7 +177,46 @@ class LeadQualificationTest extends TestCase
         ]);
 
         $this->assertNull(app(LeadQualificationService::class)->qualify($application));
-        $this->assertSame('pending', LeadQualification::sole()->status);
+
+        // No row at all — a stranded "pending" verdict would show as
+        // "Qualifying…" forever and inflate the awaiting-qualification count.
+        $this->assertSame(0, LeadQualification::count());
+    }
+
+    public function test_an_already_qualified_application_is_not_re_qualified_without_force(): void
+    {
+        [$job, $seeker] = $this->jobAndMatchingSeeker();
+        $application    = JobApplication::factory()->create([
+            'job_id'                => $job->id,
+            'job_seeker_profile_id' => $seeker->id,
+        ]);
+
+        $service = app(LeadQualificationService::class);
+        $service->qualify($application);
+
+        $this->assertNull($service->qualify($application->fresh()));
+        $this->assertSame(1, LeadQualification::sole()->attempts);
+    }
+
+    public function test_announcements_fire_once_even_if_the_job_runs_again(): void
+    {
+        [$job, $seeker] = $this->jobAndMatchingSeeker();
+        $application    = JobApplication::factory()->create([
+            'job_id'                => $job->id,
+            'job_seeker_profile_id' => $seeker->id,
+        ]);
+
+        $this->swap(LeadQualifier::class, $this->stubQualifier(92));
+
+        foreach ([1, 2] as $ignored) {
+            (new QualifyApplicationLead($application))->handle(
+                app(LeadQualificationService::class),
+                app(\App\Services\ApplicationService::class),
+            );
+        }
+
+        Notification::assertSentToTimes($job->employer->user, HotLeadIdentified::class, 1);
+        $this->assertNotNull(LeadQualification::sole()->announced_at);
     }
 
     /**

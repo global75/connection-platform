@@ -128,16 +128,22 @@ async function refresh() {
   return data.application.qualification
 }
 
-// Qualification runs on the queue, so poll until the verdict settles.
+// Qualification runs on the queue. The previous verdict is already "completed",
+// so poll on qualified_at moving rather than on the status — otherwise the very
+// first refresh looks finished and the employer is shown the stale score.
 async function requalify() {
   requalifying.value = true
+  const before = application.value?.qualification?.qualified_at ?? null
+
   try {
     await applicationsApi.requalify(route.params.id)
 
     for (let attempt = 0; attempt < 10; attempt++) {
       await new Promise((resolve) => setTimeout(resolve, 1500))
       const qualification = await refresh()
-      if (qualification && !['pending', 'processing'].includes(qualification.status)) break
+      if (!qualification) continue
+      if (qualification.status === 'failed') break
+      if (qualification.qualified_at && qualification.qualified_at !== before) break
     }
   } finally {
     requalifying.value = false

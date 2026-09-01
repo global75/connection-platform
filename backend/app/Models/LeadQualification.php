@@ -17,7 +17,7 @@ class LeadQualification extends Model
     protected $fillable = [
         'job_application_id', 'status', 'score', 'tier', 'recommended_action',
         'summary', 'strengths', 'concerns', 'criteria',
-        'provider', 'model', 'attempts', 'error', 'qualified_at',
+        'provider', 'model', 'attempts', 'error', 'qualified_at', 'announced_at',
     ];
 
     protected $casts = [
@@ -27,6 +27,7 @@ class LeadQualification extends Model
         'concerns'     => 'array',
         'criteria'     => 'array',
         'qualified_at' => 'datetime',
+        'announced_at' => 'datetime',
     ];
 
     public const STATUSES = ['pending', 'processing', 'completed', 'failed'];

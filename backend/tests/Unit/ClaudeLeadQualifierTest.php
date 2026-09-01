@@ -50,6 +50,46 @@ class ClaudeLeadQualifierTest extends TestCase
         $this->assertSame('claude-opus-5', $result->model);
     }
 
+    /**
+     * Structured outputs reject numeric and length constraints. Sending one
+     * 400s every request, and because the service falls back to heuristic
+     * scoring the row still lands as "completed" — so the feature looks healthy
+     * while never reaching Claude. Guard the schema against their return.
+     */
+    public function test_the_output_schema_carries_no_constraint_keywords(): void
+    {
+        // The mock hands the callback positional arguments, so resolve where
+        // outputConfig sits rather than hard-coding an index the SDK may move.
+        $position = null;
+        foreach ((new \ReflectionMethod(MessagesContract::class, 'create'))->getParameters() as $i => $parameter) {
+            if ($parameter->getName() === 'outputConfig') {
+                $position = $i;
+            }
+        }
+        $this->assertNotNull($position, 'the SDK no longer takes an outputConfig argument');
+
+        $sent = null;
+        $this->messages->method('create')
+            ->willReturnCallback(function (...$args) use (&$sent, $position) {
+                $sent = $args[$position] ?? null;
+
+                return $this->response(['score' => 50]);
+            });
+
+        $this->qualifier->qualify($this->lead());
+
+        $this->assertNotNull($sent, 'no outputConfig was sent');
+
+        $flat = json_encode($sent['format']['schema']);
+        foreach (['minimum', 'maximum', 'maxItems', 'minItems', 'maxLength', 'minLength', 'pattern'] as $rejected) {
+            $this->assertStringNotContainsString(
+                "\"{$rejected}\"",
+                $flat,
+                "schema still sends the rejected keyword \"{$rejected}\""
+            );
+        }
+    }
+
     public function test_it_skips_leading_thinking_blocks(): void
     {
         $message = $this->response(['score' => 40], withThinking: true);

@@ -159,17 +159,21 @@ class ClaudeLeadQualifier implements LeadQualifier
     {
         $criteria = [];
         foreach (QualificationResult::CRITERIA as $dimension) {
-            $criteria[$dimension] = ['type' => 'integer', 'minimum' => 0, 'maximum' => 100];
+            $criteria[$dimension] = [
+                'type'        => 'integer',
+                'description' => "Score for {$dimension}, from 0 to 100.",
+            ];
         }
 
+        // Structured outputs reject numeric and length constraints (minimum,
+        // maximum, maxItems, …), so the bounds live in the descriptions and are
+        // enforced for real by QualificationResult::fromArray().
         return [
             'type'       => 'object',
             'properties' => [
                 'score'   => [
                     'type'        => 'integer',
-                    'minimum'     => 0,
-                    'maximum'     => 100,
-                    'description' => 'Overall qualification score for this posting.',
+                    'description' => 'Overall qualification score for this posting, from 0 to 100.',
                 ],
                 'criteria' => [
                     'type'                 => 'object',
@@ -184,14 +188,12 @@ class ClaudeLeadQualifier implements LeadQualifier
                 'strengths' => [
                     'type'        => 'array',
                     'items'       => ['type' => 'string'],
-                    'maxItems'    => 5,
-                    'description' => 'Concrete reasons this candidate fits, drawn from the application.',
+                    'description' => 'Up to five concrete reasons this candidate fits, drawn from the application.',
                 ],
                 'concerns' => [
                     'type'        => 'array',
                     'items'       => ['type' => 'string'],
-                    'maxItems'    => 5,
-                    'description' => 'Concrete gaps or open questions, drawn from the application.',
+                    'description' => 'Up to five concrete gaps or open questions, drawn from the application.',
                 ],
                 'recommended_action' => [
                     'type' => 'string',

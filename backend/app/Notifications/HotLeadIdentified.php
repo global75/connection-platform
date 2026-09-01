@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use App\Models\JobApplication;
 use App\Models\LeadQualification;
+use App\Support\Frontend;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -40,7 +41,7 @@ class HotLeadIdentified extends Notification implements ShouldQueue
         }
 
         return $mail
-            ->action('Review Application', url("/employer/applications/{$this->application->id}"))
+            ->action('Review Application', Frontend::url("/employer/applications/{$this->application->id}"))
             ->line('Scores are guidance only — review the full application before deciding.');
     }
 

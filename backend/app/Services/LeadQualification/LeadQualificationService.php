@@ -43,11 +43,15 @@ class LeadQualificationService
             return null;
         }
 
-        $qualification = $this->record($application);
+        // Checked before any row is created: a closed or already-qualified
+        // application must not be left with a permanent "pending" verdict.
+        $existing = $application->qualification()->first();
 
-        if (! $force && ($qualification->isCompleted() || $application->isClosed())) {
+        if (! $force && ($existing?->isCompleted() || $application->isClosed())) {
             return null;
         }
+
+        $qualification = $existing ?? $this->record($application);
 
         $qualification->update([
             'status'   => 'processing',

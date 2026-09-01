@@ -38,9 +38,13 @@ class QualifyApplicationLead implements ShouldBeUnique, ShouldQueue
         public bool $announce = true,
     ) {}
 
+    /**
+     * Manual re-runs get their own lock key: an in-flight automatic pass must
+     * not silently swallow an employer's explicit request for a fresh verdict.
+     */
     public function uniqueId(): string
     {
-        return (string) $this->application->id;
+        return $this->application->id.':'.($this->force ? 'manual' : 'auto');
     }
 
     /**
@@ -55,14 +59,33 @@ class QualifyApplicationLead implements ShouldBeUnique, ShouldQueue
 
     public function handle(LeadQualificationService $qualifications, ApplicationService $applications): void
     {
-        $qualification = $qualifications->qualify($this->application, $this->force);
+        // qualify() returns null when the verdict already stands. On a retry
+        // that got this far, scoring succeeded and only the announcements
+        // failed, so fall back to the stored verdict rather than giving up on
+        // them — announce() is idempotent via announced_at.
+        $qualification = $qualifications->qualify($this->application, $this->force)
+            ?? $this->application->qualification()->first();
 
         if (! $qualification?->isCompleted() || ! $this->announce) {
             return;
         }
 
+        $this->announce($qualification, $applications);
+    }
+
+    /**
+     * Fire the one-off side effects of a completed verdict, at most once.
+     */
+    private function announce(LeadQualification $qualification, ApplicationService $applications): void
+    {
+        if ($qualification->announced_at !== null) {
+            return;
+        }
+
         $this->autoShortlist($qualification, $applications);
         $this->notifyEmployer($qualification);
+
+        $qualification->update(['announced_at' => now()]);
     }
 
     public function failed(?Throwable $e): void
