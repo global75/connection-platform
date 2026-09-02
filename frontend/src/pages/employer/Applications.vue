@@ -57,7 +57,14 @@
           {{ app.job_seeker?.user?.name?.[0] }}
         </div>
         <div class="flex-1 min-w-0">
-          <p class="font-medium text-sm">{{ app.job_seeker?.user?.name }}</p>
+          <p class="font-medium text-sm flex items-center gap-1.5">
+            {{ app.job_seeker?.user?.name }}
+            <VerificationBadge
+              subject="candidate"
+              :identity-verified="!!app.job_seeker?.is_identity_verified"
+              :badges="app.job_seeker?.verified_badges ?? []"
+            />
+          </p>
           <p class="text-xs text-gray-400">{{ app.job?.title }} · {{ app.job_seeker?.current_country }}</p>
         </div>
         <div class="flex items-center gap-3">
@@ -78,6 +85,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { applicationsApi } from '@/api/applications'
 import QualificationBadge from '@/components/leads/QualificationBadge.vue'
+import VerificationBadge from '@/components/verification/VerificationBadge.vue'
 
 const router = useRouter()
 const loading = ref(true)

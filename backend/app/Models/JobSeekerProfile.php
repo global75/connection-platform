@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasVerifications;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class JobSeekerProfile extends Model
 {
-    use HasFactory;
+    use HasFactory, HasVerifications;
 
     protected $fillable = [
         'user_id', 'headline', 'bio', 'resume', 'portfolio_url',
@@ -16,6 +17,7 @@ class JobSeekerProfile extends Model
         'experience_level', 'years_of_experience', 'current_job_title',
         'desired_job_title', 'desired_salary_min', 'desired_salary_max',
         'currency', 'availability', 'profile_complete', 'is_featured',
+        'is_identity_verified', 'identity_verified_at', 'verified_badges',
     ];
 
     protected $casts = [
@@ -23,6 +25,9 @@ class JobSeekerProfile extends Model
         'willing_to_relocate' => 'boolean',
         'profile_complete'    => 'boolean',
         'is_featured'         => 'boolean',
+        'is_identity_verified' => 'boolean',
+        'identity_verified_at' => 'datetime',
+        'verified_badges'      => 'array',
         'years_of_experience' => 'integer',
         'desired_salary_min'  => 'integer',
         'desired_salary_max'  => 'integer',

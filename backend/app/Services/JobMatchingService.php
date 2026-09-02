@@ -21,7 +21,7 @@ class JobMatchingService
         $openToRemote      = $seeker->open_to_remote;
 
         return Job::active()
-            ->with(['employer:id,company_name,logo', 'skills:id,name'])
+            ->with(['employer:id,company_name,logo,is_verified', 'skills:id,name'])
             ->when($openToRemote, fn ($q) => $q->where('location_type', 'remote'))
             ->get()
             ->map(fn (Job $job) => [

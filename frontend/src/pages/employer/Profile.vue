@@ -2,6 +2,8 @@
   <div class="max-w-3xl space-y-6">
     <h1 class="text-2xl font-bold">Company Profile</h1>
 
+    <VerificationPortal subject="employer" />
+
     <form @submit.prevent="save" class="space-y-5">
       <!-- Basic -->
       <div class="card p-6 space-y-4">
@@ -71,6 +73,7 @@
 </template>
 
 <script setup>
+import VerificationPortal from '@/components/verification/VerificationPortal.vue'
 import { ref, onMounted } from 'vue'
 import client from '@/api/client'
 

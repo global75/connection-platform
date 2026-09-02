@@ -7,11 +7,23 @@ use Anthropic\ServiceContracts\MessagesContract;
 use App\Services\LeadQualification\ClaudeLeadQualifier;
 use App\Services\LeadQualification\Contracts\LeadQualifier;
 use App\Services\LeadQualification\HeuristicLeadQualifier;
+use App\Services\Verification\Checkers\GithubOauthChecker;
+use App\Services\Verification\Checkers\UnconfiguredChecker;
+use App\Services\Verification\Checkers\WorkEmailDomainChecker;
+use App\Services\Verification\Contracts\DnsResolver;
+use App\Services\Verification\SystemDnsResolver;
+use App\Services\Verification\VerificationService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
+    {
+        $this->registerLeadQualification();
+        $this->registerVerification();
+    }
+
+    private function registerLeadQualification(): void
     {
         $this->app->singleton(Client::class, fn () => new Client(
             apiKey: config('ai.anthropic.api_key'),
@@ -22,6 +34,22 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(MessagesContract::class, fn ($app) => $app->make(Client::class)->messages);
 
         $this->app->bind(LeadQualifier::class, fn ($app) => $app->make($this->qualifierClass()));
+    }
+
+    private function registerVerification(): void
+    {
+        // Bound behind a contract so verification logic is testable without DNS.
+        $this->app->bind(DnsResolver::class, SystemDnsResolver::class);
+
+        $this->app->singleton(VerificationService::class, fn ($app) => new VerificationService([
+            $app->make(WorkEmailDomainChecker::class),
+            $app->make(GithubOauthChecker::class),
+            // No vendor account is wired up for these on a default install, so
+            // they report themselves unavailable rather than silently failing
+            // applicants. Bind a real checker here once credentials exist.
+            new UnconfiguredChecker('company_registry', (string) config('verification.providers.company_registry.driver')),
+            new UnconfiguredChecker('government_id', (string) config('verification.providers.government_id.driver')),
+        ]));
     }
 
     /**
