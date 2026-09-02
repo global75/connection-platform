@@ -21,7 +21,9 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          # composer.json says ^8.3, but the committed lock pins Symfony 8.x,
+          # which requires >= 8.4. The lock is what CI has to satisfy.
+          php-version: '8.4'
           # pdo_sqlite backs the in-memory test database (see phpunit.xml).
           extensions: mbstring, xml, bcmath, curl, zip, pdo_sqlite, sqlite3
           coverage: none
