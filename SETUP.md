@@ -1,7 +1,7 @@
 # Step-by-Step Local Setup
 
 ## Prerequisites
-- PHP 8.3+ (`php -v`)
+- PHP 8.4+ (`php -v`)
 - Composer 2 (`composer -V`)
 - Node 20+ (`node -v`)
 - MySQL 8 running locally
@@ -78,7 +78,7 @@ Open **http://localhost:5173** in your browser.
 
 | Role       | Email                  | Password  |
 |------------|------------------------|-----------|
-| Admin      | admin@connextion.io    | password  |
+| Admin      | admin@remotearena.io   | password  |
 | Employer   | employer@demo.com      | password  |
 | Job Seeker | seeker@demo.com        | password  |
 
@@ -94,6 +94,41 @@ php artisan queue:work
 ```
 
 Or use `QUEUE_CONNECTION=sync` in `.env` during development to run jobs immediately (no worker needed).
+
+---
+
+---
+
+## Step 6 — AI Lead Qualification (optional)
+
+Applications are scored automatically as they arrive. With no configuration the
+platform uses its built-in heuristic scorer; to use Claude instead, add a key to
+`backend/.env`:
+
+```bash
+ANTHROPIC_API_KEY=sk-ant-...
+```
+
+Qualification runs on the queue, so keep `php artisan queue:work` running (or use
+`QUEUE_CONNECTION=sync`). To score applications created before the feature existed:
+
+```bash
+php artisan leads:qualify
+```
+
+See the "AI Lead Qualification" section of `README.md` for the full settings list.
+
+---
+
+## Running the Test Suite
+
+```bash
+cd backend
+php vendor/bin/phpunit          # or: php artisan test
+```
+
+Tests run against an in-memory SQLite database and never call the Anthropic API —
+`phpunit.xml` pins the qualification driver to `heuristic`.
 
 ---
 

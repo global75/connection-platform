@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Jobs\QualifyApplicationLead;
 use App\Models\Job;
 use App\Models\JobApplication;
 use App\Models\JobSeekerProfile;
@@ -48,6 +49,10 @@ class ApplicationService
 
             // Notify employer
             $job->employer->user->notify(new ApplicationReceived($application));
+
+            // Qualify the lead in the background so the applicant isn't kept waiting
+            // on an AI call; afterCommit keeps the worker from racing this transaction.
+            QualifyApplicationLead::dispatch($application)->afterCommit();
 
             return $application->load('job.employer', 'jobSeeker.user');
         });

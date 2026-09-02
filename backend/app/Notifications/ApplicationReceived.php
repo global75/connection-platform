@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Models\JobApplication;
+use App\Support\Frontend;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -28,7 +29,7 @@ class ApplicationReceived extends Notification implements ShouldQueue
             ->subject("New Application: {$jobTitle}")
             ->greeting("Hello {$notifiable->name}!")
             ->line("{$seeker->name} has applied to your job posting: **{$jobTitle}**.")
-            ->action('View Application', url("/employer/applications/{$this->application->id}"))
+            ->action('View Application', Frontend::url("/employer/applications/{$this->application->id}"))
             ->line('Log in to review their profile and cover letter.');
     }
 
