@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'connextion/platform-api',
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
-        'reference' => null,
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'reference' => '65e49e013723aafd6777fe07737b58a32260071e',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -29,9 +29,9 @@
             'dev_requirement' => false,
         ),
         'connextion/platform-api' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
-            'reference' => null,
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '65e49e013723aafd6777fe07737b58a32260071e',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

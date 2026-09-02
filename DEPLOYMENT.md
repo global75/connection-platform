@@ -2,7 +2,7 @@
 
 ## Production Stack
 - **Server**: Ubuntu 22.04 (AWS EC2, DigitalOcean, etc.)
-- **Web**: Nginx + PHP 8.3-FPM
+- **Web**: Nginx + PHP 8.4-FPM
 - **DB**: MySQL 8
 - **Queue**: Redis + Laravel Horizon
 - **Storage**: AWS S3 (or local with Nginx serving `/storage`)
@@ -16,10 +16,10 @@
 # Install dependencies
 sudo apt update && sudo apt install -y git curl unzip nginx mysql-server redis-server
 
-# PHP 8.3
+# PHP 8.4
 sudo add-apt-repository ppa:ondrej/php -y
-sudo apt install -y php8.3-fpm php8.3-mysql php8.3-redis php8.3-gd \
-     php8.3-mbstring php8.3-xml php8.3-curl php8.3-zip php8.3-bcmath
+sudo apt install -y php8.4-fpm php8.4-mysql php8.4-redis php8.4-gd \
+     php8.4-mbstring php8.4-xml php8.4-curl php8.4-zip php8.4-bcmath
 
 # Composer
 curl -sS https://getcomposer.org/installer | php
@@ -96,7 +96,7 @@ server {
         try_files $uri $uri/ /index.php?$query_string;
 
         location ~ \.php$ {
-            fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+            fastcgi_pass unix:/run/php/php8.4-fpm.sock;
             fastcgi_param SCRIPT_FILENAME /var/www/connextion-platform/backend/public$fastcgi_script_name;
             include fastcgi_params;
         }

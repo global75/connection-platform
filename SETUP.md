@@ -1,7 +1,7 @@
 # Step-by-Step Local Setup
 
 ## Prerequisites
-- PHP 8.3+ (`php -v`)
+- PHP 8.4+ (`php -v`)
 - Composer 2 (`composer -V`)
 - Node 20+ (`node -v`)
 - MySQL 8 running locally
