@@ -13,6 +13,7 @@ const router = createRouter({
         { path: '',       name: 'home',    component: () => import('@/pages/Home.vue') },
         { path: 'jobs',   name: 'jobs',    component: () => import('@/pages/jobs/JobSearch.vue') },
         { path: 'jobs/:slug', name: 'job', component: () => import('@/pages/jobs/JobDetail.vue') },
+        { path: 'services/localization', name: 'services.localization', component: () => import('@/pages/services/SaaSLocalization.vue') },
       ],
     },
 
