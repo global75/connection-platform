@@ -2148,6 +2148,7 @@ return array(
     'App\\Services\\LeadQualification\\LeadQualificationService' => $baseDir . '/app/Services/LeadQualification/LeadQualificationService.php',
     'App\\Services\\LeadQualification\\QualificationResult' => $baseDir . '/app/Services/LeadQualification/QualificationResult.php',
     'App\\Services\\MessageService' => $baseDir . '/app/Services/MessageService.php',
+    'App\\Support\\Frontend' => $baseDir . '/app/Support/Frontend.php',
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'Brick\\Math\\BigDecimal' => $vendorDir . '/brick/math/src/BigDecimal.php',
     'Brick\\Math\\BigInteger' => $vendorDir . '/brick/math/src/BigInteger.php',

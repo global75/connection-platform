@@ -2684,6 +2684,7 @@ class ComposerStaticInit29c3eaf88045b485f665f4e4a8a7a365
         'App\\Services\\LeadQualification\\LeadQualificationService' => __DIR__ . '/../..' . '/app/Services/LeadQualification/LeadQualificationService.php',
         'App\\Services\\LeadQualification\\QualificationResult' => __DIR__ . '/../..' . '/app/Services/LeadQualification/QualificationResult.php',
         'App\\Services\\MessageService' => __DIR__ . '/../..' . '/app/Services/MessageService.php',
+        'App\\Support\\Frontend' => __DIR__ . '/../..' . '/app/Support/Frontend.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Brick\\Math\\BigDecimal' => __DIR__ . '/..' . '/brick/math/src/BigDecimal.php',
         'Brick\\Math\\BigInteger' => __DIR__ . '/..' . '/brick/math/src/BigInteger.php',

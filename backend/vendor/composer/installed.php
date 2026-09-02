@@ -3,7 +3,7 @@
         'name' => 'connextion/platform-api',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '348b31d793b85ef12fb0f664daa78589312a94f8',
+        'reference' => 'd45c824a245ea69c6eca6855982319382381ca25',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -40,7 +40,7 @@
         'connextion/platform-api' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '348b31d793b85ef12fb0f664daa78589312a94f8',
+            'reference' => 'd45c824a245ea69c6eca6855982319382381ca25',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

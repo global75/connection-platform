@@ -47,7 +47,7 @@ remotearena-platform/
 ## Quick Setup
 
 ### Prerequisites
-- PHP 8.3+, Composer 2
+- PHP 8.4+, Composer 2
 - Node 20+, npm 10
 - MySQL 8
 
