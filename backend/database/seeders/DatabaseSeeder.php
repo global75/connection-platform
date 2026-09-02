@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
         // Admin
         User::create([
             'name'              => 'Platform Admin',
-            'email'             => 'admin@connextion.io',
+            'email'             => 'admin@remotearena.io',
             'password'          => Hash::make('password'),
             'role'              => 'admin',
             'email_verified_at' => now(),

@@ -50,8 +50,10 @@ Route::middleware(['auth:sanctum', 'role:employer'])
 
     // Applications
     Route::get('/applications',                          [Employer\ApplicationController::class, 'index']);
+    Route::get('/applications/qualification-summary',    [Employer\ApplicationController::class, 'qualificationSummary']);
     Route::get('/applications/{application}',            [Employer\ApplicationController::class, 'show']);
     Route::patch('/applications/{application}/status',   [Employer\ApplicationController::class, 'updateStatus']);
+    Route::post('/applications/{application}/qualify',   [Employer\ApplicationController::class, 'qualify']);
 
     // Verification
     Route::get('/verification',  [Employer\VerificationController::class, 'show']);

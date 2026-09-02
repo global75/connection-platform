@@ -1,4 +1,4 @@
-# Connextion Platform — Deployment Guide
+# Remote Arena Platform — Deployment Guide
 
 ## Production Stack
 - **Server**: Ubuntu 22.04 (AWS EC2, DigitalOcean, etc.)
@@ -36,8 +36,8 @@ sudo apt install -y nodejs
 
 ```bash
 cd /var/www
-git clone https://github.com/your-org/connextion-platform.git
-cd connextion-platform
+git clone https://github.com/your-org/remotearena-platform.git
+cd remotearena-platform
 
 # Backend
 cd backend
@@ -67,7 +67,7 @@ npm run build
 ## 3. Nginx Config
 
 ```nginx
-# /etc/nginx/sites-available/connextion
+# /etc/nginx/sites-available/remotearena
 
 server {
     listen 80;
@@ -83,7 +83,7 @@ server {
     ssl_certificate_key /etc/letsencrypt/live/yourdomain.com/privkey.pem;
 
     # Frontend SPA (built static files)
-    root /var/www/connextion-platform/frontend/dist;
+    root /var/www/remotearena-platform/frontend/dist;
     index index.html;
 
     location / {
@@ -92,19 +92,19 @@ server {
 
     # Backend API
     location /api {
-        root /var/www/connextion-platform/backend/public;
+        root /var/www/remotearena-platform/backend/public;
         try_files $uri $uri/ /index.php?$query_string;
 
         location ~ \.php$ {
             fastcgi_pass unix:/run/php/php8.4-fpm.sock;
-            fastcgi_param SCRIPT_FILENAME /var/www/connextion-platform/backend/public$fastcgi_script_name;
+            fastcgi_param SCRIPT_FILENAME /var/www/remotearena-platform/backend/public$fastcgi_script_name;
             include fastcgi_params;
         }
     }
 
     # Laravel storage
     location /storage {
-        alias /var/www/connextion-platform/backend/storage/app/public;
+        alias /var/www/remotearena-platform/backend/storage/app/public;
     }
 
     client_max_body_size 10M;
@@ -112,7 +112,7 @@ server {
 ```
 
 ```bash
-sudo ln -s /etc/nginx/sites-available/connextion /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/remotearena /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
 
 # SSL
@@ -124,9 +124,9 @@ sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
 ## 4. Permissions
 
 ```bash
-sudo chown -R www-data:www-data /var/www/connextion-platform/backend/storage
-sudo chown -R www-data:www-data /var/www/connextion-platform/backend/bootstrap/cache
-sudo chmod -R 775 /var/www/connextion-platform/backend/storage
+sudo chown -R www-data:www-data /var/www/remotearena-platform/backend/storage
+sudo chown -R www-data:www-data /var/www/remotearena-platform/backend/bootstrap/cache
+sudo chmod -R 775 /var/www/remotearena-platform/backend/storage
 ```
 
 ---
@@ -138,10 +138,10 @@ sudo apt install supervisor
 ```
 
 ```ini
-# /etc/supervisor/conf.d/connextion-worker.conf
-[program:connextion-worker]
+# /etc/supervisor/conf.d/remotearena-worker.conf
+[program:remotearena-worker]
 process_name=%(program_name)s_%(process_num)02d
-command=php /var/www/connextion-platform/backend/artisan queue:work redis --sleep=3 --tries=3 --max-time=3600
+command=php /var/www/remotearena-platform/backend/artisan queue:work redis --sleep=3 --tries=3 --max-time=3600
 autostart=true
 autorestart=true
 stopasgroup=true
@@ -149,14 +149,14 @@ killasgroup=true
 user=www-data
 numprocs=4
 redirect_stderr=true
-stdout_logfile=/var/www/connextion-platform/backend/storage/logs/worker.log
+stdout_logfile=/var/www/remotearena-platform/backend/storage/logs/worker.log
 stopwaitsecs=3600
 ```
 
 ```bash
 sudo supervisorctl reread
 sudo supervisorctl update
-sudo supervisorctl start connextion-worker:*
+sudo supervisorctl start remotearena-worker:*
 ```
 
 ---
@@ -166,7 +166,7 @@ sudo supervisorctl start connextion-worker:*
 ```bash
 sudo crontab -e -u www-data
 # Add:
-* * * * * php /var/www/connextion-platform/backend/artisan schedule:run >> /dev/null 2>&1
+* * * * * php /var/www/remotearena-platform/backend/artisan schedule:run >> /dev/null 2>&1
 ```
 
 ---
@@ -204,8 +204,8 @@ STRIPE_SECRET=sk_live_...
 ## 8. Database Backups (mysqldump + cron)
 
 ```bash
-# /etc/cron.d/connextion-backup
-0 2 * * * root mysqldump connextion_prod | gzip > /backups/connextion_$(date +\%Y\%m\%d).sql.gz
+# /etc/cron.d/remotearena-backup
+0 2 * * * root mysqldump connextion_prod | gzip > /backups/remotearena_$(date +\%Y\%m\%d).sql.gz
 ```
 
 ---
