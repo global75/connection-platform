@@ -13,6 +13,6 @@ return [
     |
     */
 
-    'notify_email' => env('LEADS_NOTIFY_EMAIL', env('MAIL_FROM_ADDRESS', 'hello@remotearena.io')),
+    'notify_email' => env('LEADS_NOTIFY_EMAIL', 'sales@remotearena.io'),
 
 ];
