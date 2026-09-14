@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\JobController;
 use App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Api\Employer;
 use App\Http\Controllers\Api\JobSeeker;
+use App\Http\Controllers\Api\Services\LocalizationLeadController;
 use Illuminate\Support\Facades\Route;
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -17,6 +18,9 @@ Route::post('/auth/login',    [AuthController::class, 'login']);
 // Public job listings
 Route::get('/jobs',       [JobController::class, 'index']);
 Route::get('/jobs/{slug}',[JobController::class, 'show']);
+
+// Service lead capture (marketing pages)
+Route::post('/services/localization', [LocalizationLeadController::class, 'store']);
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Authenticated (any role)
