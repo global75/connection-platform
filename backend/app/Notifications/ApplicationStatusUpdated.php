@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Models\JobApplication;
+use App\Support\Frontend;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -39,7 +40,7 @@ class ApplicationStatusUpdated extends Notification implements ShouldQueue
             ->greeting("Hello {$notifiable->name}!")
             ->line($label)
             ->line("Position: **{$jobTitle}** at **{$company}**")
-            ->action('View Application', url("/job-seeker/applications/{$this->application->id}"))
+            ->action('View Application', Frontend::url("/job-seeker/applications/{$this->application->id}"))
             ->line('Log in to see more details.');
     }
 

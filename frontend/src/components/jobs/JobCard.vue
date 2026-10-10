@@ -13,7 +13,10 @@
       <div class="flex items-start justify-between gap-2">
         <div class="min-w-0">
           <h3 class="font-semibold text-gray-900 truncate">{{ job.title }}</h3>
-          <p class="text-sm text-gray-500 truncate">{{ job.employer?.company_name }}</p>
+          <p class="text-sm text-gray-500 flex items-center gap-1.5 min-w-0">
+            <span class="truncate">{{ job.employer?.company_name }}</span>
+            <VerificationBadge subject="employer" :verified="!!job.employer?.is_verified" />
+          </p>
         </div>
         <span v-if="job.is_featured" class="badge-blue flex-shrink-0">Featured</span>
       </div>
@@ -52,6 +55,7 @@
 </template>
 
 <script setup>
+import VerificationBadge from '@/components/verification/VerificationBadge.vue'
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { workArrangement, employmentType } from '@/lib/labels'

@@ -1,10 +1,11 @@
 {
     "name": "connextion/platform-api",
-    "description": "Connextion Platform — Laravel API Backend",
+    "description": "Remote Arena Platform — Laravel API Backend",
     "keywords": ["laravel", "jobs", "hiring"],
     "license": "MIT",
     "require": {
-        "php": "^8.3",
+        "php": "^8.4",
+        "anthropic-ai/sdk": "^0.43.0",
         "laravel/framework": "^11.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9"

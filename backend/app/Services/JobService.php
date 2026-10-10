@@ -25,7 +25,7 @@ class JobService
     {
         $query = Job::active()
             ->with([
-                'employer:id,company_name,company_slug,logo,headquarters_city,headquarters_state,headquarters_country',
+                'employer:id,company_name,company_slug,logo,is_verified,headquarters_city,headquarters_state,headquarters_country',
                 'skills:id,name,slug',
             ]);
 
@@ -242,7 +242,7 @@ class JobService
         $job->incrementViews();
 
         return $job->load([
-            'employer:id,company_name,company_slug,logo,description,website,headquarters_city,headquarters_state,headquarters_country,founded_year,company_size',
+            'employer:id,company_name,company_slug,logo,description,website,headquarters_city,headquarters_state,headquarters_country,founded_year,company_size,is_verified,verified_at',
             'skills:id,name,slug,category',
         ]);
     }

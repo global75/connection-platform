@@ -21,7 +21,7 @@ class JobMatchingService
         $seekerSkillIds = $seeker->skills()->pluck('skills.id');
 
         $candidates = Job::active()
-            ->with(['employer:id,company_name,logo,headquarters_city,headquarters_state', 'skills:id,name'])
+            ->with(['employer:id,company_name,logo,is_verified,headquarters_city,headquarters_state', 'skills:id,name'])
             // Only surface jobs this person is actually allowed to apply to.
             ->openToCandidatesFrom($seeker->current_country, $seeker->current_state)
             // And only the ways of working they said they want.

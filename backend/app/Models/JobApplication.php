@@ -47,6 +47,11 @@ class JobApplication extends Model
         return $this->hasOne(InterviewSchedule::class)->latestOfMany('scheduled_at');
     }
 
+    public function qualification()
+    {
+        return $this->hasOne(LeadQualification::class);
+    }
+
     // ── Helpers ───────────────────────────────────────────────────
 
     public function markViewed(): void
@@ -58,4 +63,12 @@ class JobApplication extends Model
 
     public function isWithdrawn(): bool { return $this->status === 'withdrawn'; }
     public function isHired(): bool     { return $this->status === 'hired'; }
+
+    /**
+     * Closed applications are never (re)qualified — the outcome is already known.
+     */
+    public function isClosed(): bool
+    {
+        return in_array($this->status, ['hired', 'rejected', 'withdrawn'], true);
+    }
 }

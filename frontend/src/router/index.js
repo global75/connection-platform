@@ -31,6 +31,7 @@ const router = createRouter({
         },
 
         { path: 'jobs/:slug', name: 'job', component: () => import('@/pages/jobs/JobDetail.vue') },
+        { path: 'services/localization', name: 'services.localization', component: () => import('@/pages/services/SaaSLocalization.vue') },
       ],
     },
 

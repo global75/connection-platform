@@ -3,7 +3,7 @@
     <!-- Sidebar -->
     <aside class="w-64 bg-white border-r border-gray-200 flex flex-col fixed h-full z-20">
       <div class="h-16 flex items-center px-6 border-b border-gray-200">
-        <RouterLink to="/" class="text-xl font-bold text-primary-600">Connextion</RouterLink>
+        <RouterLink to="/" class="text-xl font-bold text-primary-600">Remote Arena</RouterLink>
       </div>
 
       <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-1">

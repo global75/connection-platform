@@ -1,6 +1,6 @@
 import { onBeforeUnmount, watchEffect } from 'vue'
 
-const DEFAULT_TITLE = 'Connextion — Find talent. Find opportunities. Anywhere.'
+const DEFAULT_TITLE = 'Remote Arena — Find talent. Find opportunities. Anywhere.'
 
 function setMeta(selector, attrs) {
   let el = document.head.querySelector(selector)
@@ -20,7 +20,7 @@ export function useSeo(source) {
   watchEffect(() => {
     const { title, description, canonical } = typeof source === 'function' ? source() : source
 
-    document.title = title ? `${title} | Connextion` : DEFAULT_TITLE
+    document.title = title ? `${title} | Remote Arena` : DEFAULT_TITLE
 
     if (description) {
       setMeta('meta[name="description"]', { name: 'description', content: description })

@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2 class="text-2xl font-bold text-gray-900 mb-1">Welcome back</h2>
-    <p class="text-gray-500 text-sm mb-6">Sign in to your Connextion account</p>
+    <p class="text-gray-500 text-sm mb-6">Sign in to your Remote Arena account</p>
 
     <form @submit.prevent="submit" class="space-y-4">
       <div>

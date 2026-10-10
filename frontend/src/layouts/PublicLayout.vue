@@ -4,7 +4,7 @@
     <header class="bg-white border-b border-gray-200 sticky top-0 z-30">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <RouterLink to="/" class="flex items-center gap-2">
-          <span class="text-xl font-bold text-primary-600">Connextion</span>
+          <span class="text-xl font-bold text-primary-600">Remote Arena</span>
         </RouterLink>
 
         <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
@@ -49,7 +49,7 @@
       <div class="max-w-7xl mx-auto px-4">
         <div class="grid gap-8 sm:grid-cols-3 text-center sm:text-left">
           <div>
-            <p class="font-semibold text-white mb-1">Connextion</p>
+            <p class="font-semibold text-white mb-1">Remote Arena</p>
             <p>Connecting talent and businesses locally, nationally and globally.</p>
           </div>
           <div>
@@ -71,7 +71,7 @@
             </ul>
           </div>
         </div>
-        <p class="mt-8 text-center">© {{ new Date().getFullYear() }} Connextion Inc. All rights reserved.</p>
+        <p class="mt-8 text-center">© {{ new Date().getFullYear() }} RemoteArena LLC. All rights reserved.</p>
       </div>
     </footer>
   </div>

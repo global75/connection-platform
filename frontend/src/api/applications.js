@@ -10,4 +10,8 @@ export const applicationsApi = {
   list:         (params)   => client.get('/employer/applications', { params }),
   show:         (id)       => client.get(`/employer/applications/${id}`),
   updateStatus: (id, data) => client.patch(`/employer/applications/${id}/status`, data),
+
+  // AI lead qualification
+  requalify:            (id) => client.post(`/employer/applications/${id}/qualify`),
+  qualificationSummary: ()   => client.get('/employer/applications/qualification-summary'),
 }

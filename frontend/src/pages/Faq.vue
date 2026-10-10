@@ -3,14 +3,14 @@
     <header class="text-center mb-10">
       <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">Frequently Asked Questions</h1>
       <p class="text-gray-500 mt-3">
-        Everything you need to know about finding opportunities, hiring talent and using Connextion.
+        Everything you need to know about finding opportunities, hiring talent and using Remote Arena.
       </p>
     </header>
 
     <!-- What the marketplace covers, stated once up front -->
     <div class="card p-6 mb-10">
       <p class="text-sm text-gray-600">
-        Connextion is a hiring marketplace that connects professionals and employers locally,
+        Remote Arena is a hiring marketplace that connects professionals and employers locally,
         nationally and internationally. Every job says three separate things:
       </p>
       <dl class="grid sm:grid-cols-3 gap-4 mt-4 text-sm">
@@ -62,7 +62,7 @@
       </p>
       <div class="flex flex-col sm:flex-row gap-3 justify-center">
         <RouterLink to="/jobs" class="btn-primary">Browse jobs</RouterLink>
-        <RouterLink to="/for-employers" class="btn-secondary">Hiring on Connextion</RouterLink>
+        <RouterLink to="/for-employers" class="btn-secondary">Hiring on Remote Arena</RouterLink>
       </div>
     </div>
   </div>
@@ -75,7 +75,7 @@ import { useSeo } from '@/composables/useSeo'
 
 useSeo({
   title: 'FAQ',
-  description: 'How hiring works on Connextion — local, national and international roles, on-site, hybrid and remote, for job seekers and employers.',
+  description: 'How hiring works on Remote Arena — local, national and international roles, on-site, hybrid and remote, for job seekers and employers.',
   canonical: '/faq',
 })
 
@@ -96,15 +96,15 @@ const groups = [
     title: '🌎 For job seekers',
     items: [
       {
-        q: 'Is Connextion free for job seekers?',
+        q: 'Is Remote Arena free for job seekers?',
         a: [
-          'Yes. Creating a professional profile, browsing jobs and applying to jobs are free for job seekers. Connextion does not charge candidates a fee to apply for employment opportunities.',
+          'Yes. Creating a professional profile, browsing jobs and applying to jobs are free for job seekers. Remote Arena does not charge candidates a fee to apply for employment opportunities.',
         ],
       },
       {
-        q: 'What kinds of jobs can I find on Connextion?',
+        q: 'What kinds of jobs can I find on Remote Arena?',
         a: [
-          'Connextion supports local, national and international opportunities across a range of industries. Depending on the employer and the position, jobs may be on-site, hybrid or remote.',
+          'Remote Arena supports local, national and international opportunities across a range of industries. Depending on the employer and the position, jobs may be on-site, hybrid or remote.',
         ],
       },
       {
@@ -122,7 +122,7 @@ const groups = [
         ],
       },
       {
-        q: 'Does Connextion only have remote jobs?',
+        q: 'Does Remote Arena only have remote jobs?',
         a: [
           'No. Remote is one of three work arrangements on the platform, alongside on-site and hybrid. Jobs may be open to local, statewide, national, North American, country-specific or international candidates, depending on what the employer requires.',
         ],
@@ -138,7 +138,7 @@ const groups = [
       {
         q: 'Will recruiters or staffing agencies contact me?',
         a: [
-          'Connextion is designed to connect professionals directly with employers, and the platform does not charge candidates placement fees or ask candidates to pay a recruiter to apply.',
+          'Remote Arena is designed to connect professionals directly with employers, and the platform does not charge candidates placement fees or ask candidates to pay a recruiter to apply.',
           'The platform does not currently prevent an agency from registering as an employer, so a listing may come from one. Each listing shows the account that posted it.',
         ],
       },
@@ -148,7 +148,7 @@ const groups = [
     title: '🏢 For employers',
     items: [
       {
-        q: 'What kinds of candidates can I hire through Connextion?',
+        q: 'What kinds of candidates can I hire through Remote Arena?',
         a: [
           'You can hire locally, nationally or internationally, depending on your requirements. On every job you set where the role is, whether it is on-site, hybrid or remote, and which candidates may apply.',
         ],
@@ -169,7 +169,7 @@ const groups = [
         q: 'Can I hire internationally?',
         a: [
           'Yes, when you open the job to candidates in the applicable countries — either internationally, across North America, or to a specific list of countries you choose.',
-          'Employers are responsible for ensuring their hiring complies with applicable employment, tax, labour and work-authorisation requirements. Connextion is a marketplace: it does not provide immigration sponsorship, legal advice, tax advice or employer-of-record services.',
+          'Employers are responsible for ensuring their hiring complies with applicable employment, tax, labour and work-authorisation requirements. Remote Arena is a marketplace: it does not provide immigration sponsorship, legal advice, tax advice or employer-of-record services.',
         ],
       },
       {
@@ -188,21 +188,21 @@ const groups = [
       {
         q: 'Do I need a business email to create an employer account?',
         a: [
-          'No. Any valid email address can be used to register an employer account — the platform does not currently restrict free email providers.',
-          'You are asked for company information when you complete your employer profile, and that information is what candidates see on your listings.',
+          'Not to register. Any valid email address can create an employer account, and posting a job does not depend on the address you used.',
+          'It does matter for verification: the domain check rejects free and disposable providers, so earning the verified badge means holding an account email on your own company domain.',
         ],
       },
       {
         q: 'How does employer verification work?',
         a: [
-          'Employer accounts carry a verified status that our team applies after reviewing the company. It is a manual review rather than an automatic domain check, and it is not currently required in order to post a job.',
-          'Because of that, a listing without the verified marker is not necessarily suspicious, and the marker is not a guarantee about any particular employer.',
+          'Verification proves an employer controls the domain they hire for. The account email has to be on a company domain rather than a free or disposable provider, and it has to match the company website when one is set. The employer then publishes a token we issue as a DNS TXT record on that domain, and passing that check is what grants the badge.',
+          'Verification is not required in order to post a job, so a listing without the badge is not necessarily suspicious — and the badge says the domain was proven, not that the role or the company is vouched for.',
         ],
       },
       {
         q: 'Are there placement or middleman fees?',
         a: [
-          'Connextion connects employers and professionals directly. Employers pay for job-posting capacity and plan features; the platform does not currently charge a fee on a hire, and it is not a recruiter or staffing agency.',
+          'Remote Arena connects employers and professionals directly. Employers pay for job-posting capacity and plan features; the platform does not currently charge a fee on a hire, and it is not a recruiter or staffing agency.',
         ],
       },
     ],
@@ -211,28 +211,28 @@ const groups = [
     title: '🤖 AI Solutions',
     items: [
       {
-        q: 'What is AI Lead Qualification?',
+        q: 'What does the AI do on Remote Arena?',
         a: [
-          'AI Lead Qualification is a separate business product in development, not yet available in the platform. It is planned to help businesses analyse and prioritise leads using information the business provides and available lead data — identifying which leads may be a stronger fit, organising prospects and producing qualification summaries.',
-          'It is designed to sit alongside the hiring marketplace, not inside it. Nothing about it changes how jobs, applications or profiles work.',
+          'It qualifies inbound applications for employers. Each application is scored against the job it targets, sorted into hot, warm or cold, and given a recommended next action, so an employer can work the highest-intent candidates first instead of reading a queue in arrival order.',
+          'It is an aid to triage, not a gate: every application still reaches the employer, and nothing is rejected automatically.',
         ],
       },
       {
-        q: 'Will the AI guarantee that a lead becomes a customer?',
+        q: 'Does the AI decide who gets hired?',
         a: [
-          'No. Lead qualification produces analysis and prioritisation. It cannot guarantee that a prospect will buy anything.',
+          'No. It produces a score, a tier and a suggested action. Employers review applications and make their own decisions, and they can re-run a qualification themselves.',
         ],
       },
       {
-        q: 'Will AI make decisions for my sales team?',
+        q: 'Can the AI invent information about a candidate?',
         a: [
-          'No. The product is designed to provide recommendations and qualification insights. Businesses remain responsible for reviewing leads and making their own sales decisions.',
+          'It scores the application and profile it is given; it does not go looking for information elsewhere. When a verdict cannot be produced the record is left in a truthful failed state rather than filled with a guess, and a deterministic fallback scores the application when the AI service is unavailable.',
         ],
       },
       {
-        q: 'Can the AI invent information about a lead?',
+        q: 'Is the AI always on?',
         a: [
-          'It is being designed not to. Where information is unavailable or cannot be verified, the system is intended to mark it as unavailable rather than present an assumption as a fact.',
+          'It is a configurable feature, so whether qualification runs depends on how the platform is deployed. When it is off, applications simply arrive unqualified and nothing else changes.',
         ],
       },
     ],
@@ -255,10 +255,10 @@ const groups = [
         ],
       },
       {
-        q: 'Does Connextion provide visa sponsorship or immigration services?',
+        q: 'Does Remote Arena provide visa sponsorship or immigration services?',
         a: [
-          'No. Connextion is a hiring marketplace. A job being open to international candidates does not mean the employer provides visa sponsorship or immigration support.',
-          'Some employers mark a job as offering visa sponsorship, and you can filter for those. Discuss work authorisation directly with the employer. Connextion does not provide immigration or legal advice.',
+          'No. Remote Arena is a hiring marketplace. A job being open to international candidates does not mean the employer provides visa sponsorship or immigration support.',
+          'Some employers mark a job as offering visa sponsorship, and you can filter for those. Discuss work authorisation directly with the employer. Remote Arena does not provide immigration or legal advice.',
         ],
       },
       {

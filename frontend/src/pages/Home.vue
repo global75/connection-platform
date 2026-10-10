@@ -6,7 +6,7 @@
         Find talent. Find opportunities. <span class="text-primary-300">Anywhere.</span>
       </h1>
       <p class="text-lg sm:text-xl text-primary-100 mb-10 max-w-2xl mx-auto">
-        Connextion connects professionals and businesses for local, national and international
+        Remote Arena connects professionals and businesses for local, national and international
         hiring — from on-site and hybrid roles to remote opportunities.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
@@ -156,7 +156,7 @@ const countries  = ref([])
 
 useSeo({
   title: null,
-  description: 'Connextion connects professionals and businesses for local, national and international hiring — on-site, hybrid and remote roles in one marketplace.',
+  description: 'Remote Arena connects professionals and businesses for local, national and international hiring — on-site, hybrid and remote roles in one marketplace.',
   canonical: '/',
 })
 

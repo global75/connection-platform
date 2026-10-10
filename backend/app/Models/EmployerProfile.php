@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasVerifications;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Services\LocationService;
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +10,7 @@ use Illuminate\Support\Str;
 
 class EmployerProfile extends Model
 {
-    use HasFactory;
+    use HasFactory, HasVerifications;
 
     protected $fillable = [
         'user_id', 'company_name', 'company_slug', 'description', 'industry',
@@ -17,11 +18,13 @@ class EmployerProfile extends Model
         'headquarters_country', 'headquarters_postal_code', 'latitude', 'longitude',
         'hiring_scopes', 'linkedin_url', 'twitter_url', 'founded_year',
         'is_verified', 'is_featured', 'subscription_tier', 'job_post_credits',
+        'verified_at', 'business_registration_number', 'work_email_domain',
     ];
 
     protected $casts = [
         'is_verified'  => 'boolean',
         'is_featured'  => 'boolean',
+        'verified_at'  => 'datetime',
         'founded_year' => 'integer',
         'job_post_credits' => 'integer',
         'latitude'     => 'float',

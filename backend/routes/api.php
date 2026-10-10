@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\SitemapController;
 use App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Api\Employer;
 use App\Http\Controllers\Api\JobSeeker;
+use App\Http\Controllers\Api\Services\LocalizationLeadController;
 use Illuminate\Support\Facades\Route;
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -30,6 +31,9 @@ Route::get('/search-filters',       [DiscoveryController::class, 'filters']);
 
 // SEO
 Route::get('/sitemap.xml',          [SitemapController::class, 'index']);
+
+// Service lead capture (marketing pages)
+Route::post('/services/localization', [LocalizationLeadController::class, 'store']);
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Authenticated (any role)
@@ -63,8 +67,14 @@ Route::middleware(['auth:sanctum', 'role:employer'])
 
     // Applications
     Route::get('/applications',                          [Employer\ApplicationController::class, 'index']);
+    Route::get('/applications/qualification-summary',    [Employer\ApplicationController::class, 'qualificationSummary']);
     Route::get('/applications/{application}',            [Employer\ApplicationController::class, 'show']);
     Route::patch('/applications/{application}/status',   [Employer\ApplicationController::class, 'updateStatus']);
+    Route::post('/applications/{application}/qualify',   [Employer\ApplicationController::class, 'qualify']);
+
+    // Verification
+    Route::get('/verification',  [Employer\VerificationController::class, 'show']);
+    Route::post('/verification', [Employer\VerificationController::class, 'store']);
 
     // Messaging
     Route::get('/conversations',                                [Employer\MessageController::class, 'conversations']);
@@ -99,6 +109,10 @@ Route::middleware(['auth:sanctum', 'role:job_seeker'])
     Route::get('/applications/{application}',        [JobSeeker\ApplicationController::class, 'show']);
     Route::patch('/applications/{application}/withdraw', [JobSeeker\ApplicationController::class, 'withdraw']);
 
+    // Verification
+    Route::get('/verification',  [JobSeeker\VerificationController::class, 'show']);
+    Route::post('/verification', [JobSeeker\VerificationController::class, 'store']);
+
     // Messaging
     Route::get('/conversations',                            [JobSeeker\MessageController::class, 'conversations']);
     Route::get('/conversations/{conversation}/messages',    [JobSeeker\MessageController::class, 'messages']);
@@ -126,6 +140,9 @@ Route::middleware(['auth:sanctum', 'role:admin'])
     Route::patch('/jobs/{job}/feature',  [Admin\JobController::class, 'feature']);
     Route::delete('/jobs/{job}',         [Admin\JobController::class, 'destroy']);
     Route::post('/jobs/{id}/restore',    [Admin\JobController::class, 'restore']);
+
+    Route::get('/verifications',                    [Admin\VerificationController::class, 'index']);
+    Route::patch('/verifications/{verification}',   [Admin\VerificationController::class, 'review']);
 
     Route::get('/reports',                       [Admin\ReportController::class, 'index']);
     Route::patch('/reports/{report}/resolve',    [Admin\ReportController::class, 'resolve']);
