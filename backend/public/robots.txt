@@ -1,2 +1,5 @@
 User-agent: *
 Disallow:
+
+# Generated from live job and location data; see DEPLOYMENT.md section 10.
+Sitemap: /sitemap.xml
