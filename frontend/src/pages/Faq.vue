@@ -196,7 +196,7 @@ const groups = [
         q: 'How does employer verification work?',
         a: [
           'Verification proves an employer controls the domain they hire for. The account email has to be on a company domain rather than a free or disposable provider, and it has to match the company website when one is set. The employer then publishes a token we issue as a DNS TXT record on that domain, and passing that check is what grants the badge.',
-          'Verification is not required in order to post a job, so a listing without the badge is not necessarily suspicious — and the badge says the domain was proven, not that the role or the company is vouched for.',
+          'Whether verification is required before posting depends on how the platform is configured; by default it is not, so a listing without the badge is not necessarily suspicious — and the badge says the domain was proven, not that the role or the company is vouched for.',
         ],
       },
       {
